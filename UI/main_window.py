@@ -1,5 +1,6 @@
 from database.session import get_session
 from database.entities.ORM.ClientORM import ClientORM
+from xls import xls_writer
 
 
 class MainWindow:
@@ -21,4 +22,8 @@ class MainWindow:
 
     def get_client_defaults(self):
         return self.selected_client.usual_quantity, self.selected_client.usual_price
+
+    @staticmethod
+    def write_invoice(path, client, t2c, invoice_nr, tax_date, terms, month, pay_by, sessions):
+        xls_writer.write_invoice(path, client, t2c, invoice_nr, tax_date, terms, month, pay_by, sessions)
 

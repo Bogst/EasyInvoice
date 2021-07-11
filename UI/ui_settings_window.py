@@ -19,7 +19,7 @@ class Ui_SettingsDialog(QDialog):
     def setupUi(self, SettingsDialog):
         if not SettingsDialog.objectName():
             SettingsDialog.setObjectName(u"SettingsDialog")
-        SettingsDialog.resize(649, 338)
+        SettingsDialog.resize(650, 340)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -399,7 +399,7 @@ class Ui_SettingsDialog(QDialog):
 
         client_name = self.client_combobox.currentText()
         new_client_name = self.clientNameLineEdit.text().strip()
-        clients = [c.name for c in self.settings_window.get_clients()]
+        clients = [c.name for c in SettingsWindow.get_clients()]
         if new_client_name != client_name and new_client_name in clients:
             self.validate_popup("Client name already exists")
             return False

@@ -87,3 +87,11 @@ class SettingsWindow:
         settings.post_code = post_code
         settings.phone = phone_number
         session.commit()
+
+    @staticmethod
+    def increment_invoice_nr(new_invoice_nr):
+        session = get_session()
+        settings = session.query(SettingsORM).first()
+        if new_invoice_nr + 1 > settings.invoice_nr:
+            settings.invoice_nr = new_invoice_nr+1
+        session.commit()
