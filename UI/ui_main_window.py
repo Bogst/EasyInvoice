@@ -381,8 +381,8 @@ class MainWindowUI(QWidget):
         for s in zip(self.dates, self.amounts_per_hour, self.quantities):
             ses = CleaningSession()
             ses.date = s[0].date().toString('dd/MM/yyyy')
-            ses.price = int(s[1].text())
-            ses.quantity = int(s[2].text())
+            ses.price = float(s[1].text())
+            ses.quantity = float(s[2].text())
             sessions.append(ses)
 
         path, _ = QFileDialog.getSaveFileName(self, 'Invoice Save', f"inv{invoice_nr}-{month}-{datetime.now().year}-"
