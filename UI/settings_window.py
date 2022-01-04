@@ -95,3 +95,11 @@ class SettingsWindow:
         if new_invoice_nr + 1 > settings.invoice_nr:
             settings.invoice_nr = new_invoice_nr+1
         session.commit()
+
+    @staticmethod
+    def update_all_prices(amount):
+        session = get_session()
+        clients = session.query(ClientORM).all()
+        for client in clients:
+            client.usual_price = float(client.usual_price) + amount
+        session.commit()

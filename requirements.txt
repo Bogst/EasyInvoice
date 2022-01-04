@@ -4,3 +4,4 @@ pyqt5-tools==5.15.4.3.2
 sqlalchemy==1.4.20
 PySide2==5.15.2
 xlsxWriter==1.4.4
+openpyxl==3.0.7

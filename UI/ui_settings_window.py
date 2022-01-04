@@ -188,6 +188,34 @@ class Ui_SettingsDialog(QDialog):
 
         self.verticalLayout.addItem(self.verticalSpacer)
 
+        self.global_settings_label = QLabel("Global Settings")
+        self.label.setObjectName(u"global_settings_label")
+        font = QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.global_settings_label.setFont(font)
+        self.global_settings_label.setAlignment(Qt.AlignCenter)
+        self.verticalLayout.addWidget(self.global_settings_label)
+
+        self.global_price_change_layout = QHBoxLayout()
+
+        self.global_price_change_layout.addWidget(QLabel("Update all the prices"))
+        self.global_price_decrease_button = QPushButton('-')
+        self.global_price_decrease_button.pressed.connect(self.global_price_decrease)
+        self.global_price_change_layout.addWidget(self.global_price_decrease_button)
+
+        self.global_price_change_layout.addWidget(QLabel("£"))
+
+        self.global_price_change_ammount_line_edit = QLineEdit('0.0')
+        self.global_price_change_ammount_line_edit.setValidator(QDoubleValidator(0, 999, 2))
+        self.global_price_change_layout.addWidget(self.global_price_change_ammount_line_edit)
+
+        self.global_price_increase_button=QPushButton('+')
+        self.global_price_increase_button.pressed.connect(self.global_price_increase)
+        self.global_price_change_layout.addWidget(self.global_price_increase_button)
+        self.verticalLayout.addLayout(self.global_price_change_layout)
+
 
         self.horizontalLayout.addWidget(self.ClientFrame)
 
@@ -375,7 +403,7 @@ class Ui_SettingsDialog(QDialog):
             return
 
         client_name = self.clientNameLineEdit.text().strip()
-        clients = [c.name for c in self.settings_window.get_clients()]
+        clients = [c.name for c in SettingsWindow.get_clients()]
         if client_name in clients:
             self.validate_popup("Client name already exists")
             return
@@ -387,7 +415,7 @@ class Ui_SettingsDialog(QDialog):
         quantity = float(self.clientQuantitylineEdit.text().strip())
         price = float(self.clientPricelineEdit.text().strip())
         term = int(self.clientTermlineEdit.text().strip())
-        self.settings_window.create_client(client_name, address_line_i, address_line_ii, post_code, phone_number,
+        SettingsWindow.create_client(client_name, address_line_i, address_line_ii, post_code, phone_number,
                                            quantity, price, term)
 
         self.reset_client_form()
@@ -556,3 +584,41 @@ class Ui_SettingsDialog(QDialog):
         if choice == QMessageBox.Yes:
             SettingsWindow.delete_client(client_name)
             self.reset_client_form()
+
+    def global_price_decrease(self):
+        amount = self.global_price_change_ammount_line_edit.text()
+        if len(amount) <1:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText('The amount value is empty')
+            msg.exec_()
+            return
+        else:
+            amount = float(self.global_price_change_ammount_line_edit.text())
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Question)
+            msg.setText(F'Are you sure you want to decrease all the prices by £{amount}')
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            reply = msg.exec_()
+            if reply == QMessageBox.Yes:
+                SettingsWindow.update_all_prices(-amount)
+            return
+
+    def global_price_increase(self):
+        amount = self.global_price_change_ammount_line_edit.text()
+        if len(amount) <1:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setText('The amount value is empty')
+            msg.exec_()
+            return
+        else:
+            amount = float(self.global_price_change_ammount_line_edit.text())
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Question)
+            msg.setText(F'Are you sure you want to increase all the prices by £{amount}')
+            msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            reply = msg.exec_()
+            if reply == QMessageBox.Yes:
+                SettingsWindow.update_all_prices(amount)
+            return
