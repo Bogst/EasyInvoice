@@ -120,6 +120,7 @@ class MainWindowUI(QWidget):
         tax_date_label.setText("Tax Date: ")
 
         self.tax_date_dateEdit.dateChanged.connect(self.recalculate_due_by)
+        self.tax_date_dateEdit.dateChanged.connect(self.update_default_month)
         self.tax_date_dateEdit.setCalendarPopup(True)
 
         invoice_details_layout.addRow(tax_date_label, self.tax_date_dateEdit)
@@ -336,6 +337,11 @@ class MainWindowUI(QWidget):
         self.due_by_label.setText(
             self.tax_date_dateEdit.date().addDays(int(self.terms_lineEdit.text())).toString("dd/MM/yyyy"))
 
+    @pyqtSlot()
+    def update_default_month(self):
+        self.new_date.blockSignals(True)
+        self.new_date.setDate(self.tax_date_dateEdit.date())
+        self.new_date.blockSignals(False)
 
     @pyqtSlot()
     def settings_window(self):
