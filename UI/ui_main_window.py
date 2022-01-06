@@ -385,7 +385,9 @@ class MainWindowUI(QWidget):
             ses.quantity = float(s[2].text())
             sessions.append(ses)
 
-        path, _ = QFileDialog.getSaveFileName(self, 'Invoice Save', f"inv{invoice_nr}-{month}-{datetime.now().year}-"
+        sessions.sort(key=lambda x: datetime.strptime(x.date, "%d/%m/%Y"))
+
+        path, _ = QFileDialog.getSaveFileName(self, 'Invoice Save', f"inv{invoice_nr}-{month}-{datetime.strptime(tax_date,'%d-%b-%Y').year}-"
         f"{client.name}.xlsx", "Excel Files (*.xlsx);;All Files (*)")
 
         if not path:
