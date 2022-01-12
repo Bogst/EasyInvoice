@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from calendar import month_abbr
 from functools import partialmethod, partial
 
@@ -121,6 +121,7 @@ class MainWindowUI(QWidget):
 
         self.tax_date_dateEdit.dateChanged.connect(self.recalculate_due_by)
         self.tax_date_dateEdit.dateChanged.connect(self.update_default_month)
+        self.tax_date_dateEdit.dateChanged.connect(self.update_for_month)
         self.tax_date_dateEdit.setCalendarPopup(True)
 
         invoice_details_layout.addRow(tax_date_label, self.tax_date_dateEdit)
@@ -340,8 +341,17 @@ class MainWindowUI(QWidget):
     @pyqtSlot()
     def update_default_month(self):
         self.new_date.blockSignals(True)
-        self.new_date.setDate(self.tax_date_dateEdit.date())
+        date = self.tax_date_dateEdit.date()
+        date = date.addMonths(-1)
+        date = date.addDays(-(date.day()-1))
+        self.new_date.setDate(date)
         self.new_date.blockSignals(False)
+
+    @pyqtSlot()
+    def update_for_month(self):
+        date = self.tax_date_dateEdit.date()
+        date = date.addMonths(-1)  # go back one month
+        self.month_dropdown.setCurrentIndex(date.month()-1)  # dropdown index starts at 0 month starts at 1
 
     @pyqtSlot()
     def settings_window(self):
